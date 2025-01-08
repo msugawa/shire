@@ -36,6 +36,9 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
 
+            - name: restore node_modules
+              uses: ./.github/actions/setup-node
+
             - name: Build
               run: pnpm run build
 
