@@ -10,12 +10,12 @@ export class FirstGame extends Scene {
     width: 50,
     height: 20,
     count: {
-      row: 3,
-      col: 7,
+      row: 5,
+      col: 17,
     },
     offset: {
       top: 50,
-      left: 60,
+      left: 32,
     },
     padding: 10,
   };
@@ -41,7 +41,7 @@ export class FirstGame extends Scene {
         "ball",
       )
       .setOrigin(0.5)
-      .setVelocity(150, -150)
+      .setVelocity(300, -300)
       .setCollideWorldBounds(true)
       .setBounce(1);
 
@@ -63,6 +63,7 @@ export class FirstGame extends Scene {
 
   update() {
     this.physics.collide(this.ball, this.paddle);
+    this.physics.collide(this.ball, this.bricks, this.ballHitBrick);
     this.paddle.x = this.input.x || this.game.canvas.width * 0.5;
 
     if (this.ball.active && this.ball.y > this.game.canvas.height) {
@@ -77,7 +78,9 @@ export class FirstGame extends Scene {
   }
 
   initBricks() {
-    this.bricks = this.physics.add.group();
+    this.bricks = this.physics.add.group({
+      immovable: true,
+    });
 
     for (let c = 0; c < this.brickInfo.count.col; c++) {
       for (let r = 0; r < this.brickInfo.count.row; r++) {
@@ -89,11 +92,18 @@ export class FirstGame extends Scene {
           this.brickInfo.offset.top;
         const newBrick = this.physics.add
           .sprite(brickX, brickY, "brick")
-          .setImmovable(true)
-          .setOrigin(0.5);
+          .setOrigin(0.5)
+          .setImmovable(true);
 
         this.bricks.add(newBrick);
       }
     }
   }
+
+  ballHitBrick: Phaser.Types.Physics.Arcade.ArcadePhysicsCallback = (
+    object1,
+    object2,
+  ) => {
+    object2.destroy();
+  };
 }
