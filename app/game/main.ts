@@ -18,6 +18,9 @@ const config: Phaser.Types.Core.GameConfig = {
   },
   parent: "game-container",
   backgroundColor: "#028af8",
+  physics: {
+    default: "arcade",
+  },
   scene: [Boot, Preloader, MainMenu, MainGame, GameOver, FirstGame],
 };
 

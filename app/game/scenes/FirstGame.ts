@@ -3,7 +3,7 @@ import { EventBus } from "../EventBus";
 
 export class FirstGame extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
-  ball: Phaser.GameObjects.Sprite;
+  ball: Phaser.Physics.Arcade.Sprite;
 
   constructor() {
     super("FirstGame");
@@ -17,15 +17,13 @@ export class FirstGame extends Scene {
     this.camera = this.cameras.main;
     this.camera.setBackgroundColor("#eee");
 
-    this.ball = this.add.sprite(50, 50, "ball");
+    this.ball = this.physics.add.sprite(50, 50, "ball");
+    this.ball.setVelocity(150, 150);
 
     EventBus.emit("current-scene-ready", this);
   }
 
-  update() {
-    this.ball.x += 1;
-    this.ball.y += 1;
-  }
+  update() {}
 
   changeScene() {
     this.scene.start("MainMenu");
