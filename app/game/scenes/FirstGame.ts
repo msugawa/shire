@@ -22,6 +22,11 @@ export class FirstGame extends Scene {
     EventBus.emit("current-scene-ready", this);
   }
 
+  update() {
+    this.ball.x += 1;
+    this.ball.y += 1;
+  }
+
   changeScene() {
     this.scene.start("MainMenu");
   }
