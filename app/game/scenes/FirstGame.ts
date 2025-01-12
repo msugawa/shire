@@ -17,8 +17,11 @@ export class FirstGame extends Scene {
     this.camera = this.cameras.main;
     this.camera.setBackgroundColor("#eee");
 
-    this.ball = this.physics.add.sprite(50, 50, "ball");
-    this.ball.setVelocity(150, 150);
+    this.ball = this.physics.add
+      .sprite(50, 50, "ball")
+      .setVelocity(150, 150)
+      .setCollideWorldBounds(true)
+      .setBounce(1);
 
     EventBus.emit("current-scene-ready", this);
   }
