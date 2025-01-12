@@ -5,6 +5,20 @@ export class FirstGame extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
   ball: Phaser.Physics.Arcade.Sprite;
   paddle: Phaser.Physics.Arcade.Sprite;
+  bricks: Phaser.Physics.Arcade.Group;
+  brickInfo = {
+    width: 50,
+    height: 20,
+    count: {
+      row: 3,
+      col: 7,
+    },
+    offset: {
+      top: 50,
+      left: 60,
+    },
+    padding: 10,
+  };
 
   constructor() {
     super("FirstGame");
@@ -13,6 +27,7 @@ export class FirstGame extends Scene {
   preload(): void {
     this.load.image("ball", "assets/ball.png");
     this.load.image("paddle", "assets/paddle.png");
+    this.load.image("brick", "assets/brick.png");
   }
 
   create(): void {
@@ -41,6 +56,8 @@ export class FirstGame extends Scene {
 
     this.physics.world.checkCollision.down = false;
 
+    this.initBricks();
+
     EventBus.emit("current-scene-ready", this);
   }
 
@@ -57,5 +74,26 @@ export class FirstGame extends Scene {
 
   changeScene() {
     this.scene.start("MainMenu");
+  }
+
+  initBricks() {
+    this.bricks = this.physics.add.group();
+
+    for (let c = 0; c < this.brickInfo.count.col; c++) {
+      for (let r = 0; r < this.brickInfo.count.row; r++) {
+        const brickX =
+          c * (this.brickInfo.width + this.brickInfo.padding) +
+          this.brickInfo.offset.left;
+        const brickY =
+          r * (this.brickInfo.height + this.brickInfo.padding) +
+          this.brickInfo.offset.top;
+        const newBrick = this.physics.add
+          .sprite(brickX, brickY, "brick")
+          .setImmovable(true)
+          .setOrigin(0.5);
+
+        this.bricks.add(newBrick);
+      }
+    }
   }
 }
