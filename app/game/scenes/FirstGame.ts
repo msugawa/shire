@@ -39,12 +39,20 @@ export class FirstGame extends Scene {
       .setOrigin(0.5, 1)
       .setImmovable(true);
 
+    this.physics.world.checkCollision.down = false;
+
     EventBus.emit("current-scene-ready", this);
   }
 
   update() {
     this.physics.collide(this.ball, this.paddle);
     this.paddle.x = this.input.x || this.game.canvas.width * 0.5;
+
+    if (this.ball.active && this.ball.y > this.game.canvas.height) {
+      alert("Game over!");
+      this.ball.destroy();
+      location.reload();
+    }
   }
 
   changeScene() {
