@@ -1,4 +1,4 @@
-import { Scene } from "phaser";
+import { type GameObjects, Scene } from "phaser";
 import { EventBus } from "../EventBus";
 
 export class FirstGame extends Scene {
@@ -6,6 +6,8 @@ export class FirstGame extends Scene {
   ball: Phaser.Physics.Arcade.Sprite;
   paddle: Phaser.Physics.Arcade.Sprite;
   bricks: Phaser.Physics.Arcade.Group;
+  scoreText: GameObjects.Text;
+  score = 0;
   brickInfo = {
     width: 50,
     height: 20,
@@ -58,6 +60,11 @@ export class FirstGame extends Scene {
 
     this.initBricks();
 
+    this.scoreText = this.add.text(5, 5, "Points: 0", {
+      font: "18px Arial",
+      color: "#0095DD",
+    });
+
     EventBus.emit("current-scene-ready", this);
   }
 
@@ -105,5 +112,7 @@ export class FirstGame extends Scene {
     object2,
   ) => {
     object2.destroy();
+    this.score += 10;
+    this.scoreText.setText(`Points: ${this.score}`);
   };
 }
