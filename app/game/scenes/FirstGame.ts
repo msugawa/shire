@@ -114,5 +114,19 @@ export class FirstGame extends Scene {
     object2.destroy();
     this.score += 10;
     this.scoreText.setText(`Points: ${this.score}`);
+
+    let countAlive = 0;
+    for (let i = 0; i < this.bricks.children.size; i++) {
+      const brick = this.bricks.children.entries[i];
+      if (brick.active) {
+        countAlive++;
+      }
+    }
+
+    if (countAlive === 0) {
+      alert("You won the game, congratulations!");
+      this.ball.destroy();
+      location.reload();
+    }
   };
 }
