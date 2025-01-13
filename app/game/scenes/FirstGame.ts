@@ -8,6 +8,10 @@ export class FirstGame extends Scene {
   bricks: Phaser.Physics.Arcade.Group;
   scoreText: GameObjects.Text;
   score = 0;
+  lives = 3;
+  livesText: GameObjects.Text;
+  lifeLostText: GameObjects.Text;
+  textStyle = { font: "18px Arial", fill: "#0095DD" };
   brickInfo = {
     width: 50,
     height: 20,
@@ -60,10 +64,22 @@ export class FirstGame extends Scene {
 
     this.initBricks();
 
-    this.scoreText = this.add.text(5, 5, "Points: 0", {
-      font: "18px Arial",
-      color: "#0095DD",
-    });
+    this.scoreText = this.add.text(5, 5, "Points: 0", this.textStyle);
+    this.livesText = this.add.text(
+      this.game.canvas.width - 5,
+      5,
+      `Lives: ${this.lives}`,
+      this.textStyle,
+    );
+    this.livesText.setOrigin(1, 0);
+    this.lifeLostText = this.add.text(
+      this.game.canvas.width * 0.5,
+      this.game.canvas.height * 0.5,
+      "Life lost, click to continue",
+      this.textStyle,
+    );
+    this.lifeLostText.setOrigin(0.5);
+    this.lifeLostText.visible = false;
 
     EventBus.emit("current-scene-ready", this);
   }
@@ -74,9 +90,26 @@ export class FirstGame extends Scene {
     this.paddle.x = this.input.x || this.game.canvas.width * 0.5;
 
     if (this.ball.active && this.ball.y > this.game.canvas.height) {
-      alert("Game over!");
-      this.ball.destroy();
-      location.reload();
+      this.lives--;
+      if (this.lives) {
+        this.livesText.setText(`Lives: ${this.lives}`);
+        this.lifeLostText.visible = true;
+        this.ball
+          .setPosition(
+            this.game.canvas.width * 0.5,
+            this.game.canvas.height - 100,
+          )
+          .setVelocity(0, 0);
+
+        this.input.once("pointerdown", () => {
+          this.lifeLostText.visible = false;
+          this.ball.setVelocity(300, -300);
+        });
+      } else {
+        alert("Game over!");
+        this.ball.destroy();
+        location.reload();
+      }
     }
   }
 
